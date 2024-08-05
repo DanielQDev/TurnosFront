@@ -1,22 +1,39 @@
+import isAuthenticatedGuard from '@/modules/auth/guards/authenticated.guard'
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      redirect: '/login', //{name: 'login}
+      component: () => import('@/modules/auth/layouts/AuthLayout.vue'),
+      children: [
+        {
+          path: '/login',
+          name: 'login',
+          component: () => import('@/modules/auth/pages/SignIn.vue')
+        },
+        {
+          path: '/register',
+          name: 'register',
+          component: () => import('@/modules/auth/pages/SignUp.vue')
+        }
+      ]
     }
+    // {
+    //   path: '/dashboard',
+    //   redirect: '/home',
+    //   component: '',
+    //   children: [
+    //     {
+    //       path: '/home',
+    //       name: 'home',
+    //       beforeEnter: [isAuthenticatedGuard],
+    //       component: ''
+    //     }
+    //   ]
+    // }
   ]
 })
 
