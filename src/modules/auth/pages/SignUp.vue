@@ -97,8 +97,10 @@ import { reactive, ref } from 'vue'
 import type { RegisterUser } from '../interfaces/user.interface'
 import { useAuthStore } from '../stores/auth.store'
 import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const toast = useToast()
 
 const firstnameInputRef = ref<HTMLInputElement | null>(null)
@@ -126,15 +128,15 @@ const onRegister = async () => {
 
   if (!ok) {
     toast.error('El registro no se completo, intenta de nuevo.')
+    ;(registerForm.first_name = ''),
+      (registerForm.last_name = ''),
+      (registerForm.email = ''),
+      (registerForm.password = ''),
+      (registerForm.color = '#16a34a')
   }
 
-  ;(registerForm.first_name = ''),
-    (registerForm.last_name = ''),
-    (registerForm.email = ''),
-    (registerForm.password = ''),
-    (registerForm.color = '#16a34a')
-
   console.log(ok)
+  router.replace({ name: 'home' })
 }
 </script>
 

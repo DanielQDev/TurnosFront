@@ -92,15 +92,13 @@ const onLogin = async () => {
 
   if (!ok) {
     toast.error('Usuario o contraseña incorrectos.')
+    loginForm.email = ''
+    loginForm.password = ''
+  } else {
+    router.replace({ name: 'home' })
   }
-  // loginForm.email = ''
-  // loginForm.password = ''
 
   console.log('login', ok)
-
-  router.replace({
-    name: 'login'
-  })
 }
 </script>
 
