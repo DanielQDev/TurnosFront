@@ -20,20 +20,20 @@ const router = createRouter({
           component: () => import('@/modules/auth/pages/SignUp.vue')
         }
       ]
+    },
+    {
+      path: '/dashboard',
+      redirect: '/home',
+      component: () => import('@/modules/dashboard/layouts/DashboardLayout.vue'),
+      children: [
+        {
+          path: '/home',
+          name: 'home',
+          beforeEnter: [isAuthenticatedGuard],
+          component: () => import('@/modules/dashboard/pages/HomePage.vue')
+        }
+      ]
     }
-    // {
-    //   path: '/dashboard',
-    //   redirect: '/home',
-    //   component: '',
-    //   children: [
-    //     {
-    //       path: '/home',
-    //       name: 'home',
-    //       beforeEnter: [isAuthenticatedGuard],
-    //       component: ''
-    //     }
-    //   ]
-    // }
   ]
 })
 
