@@ -5,8 +5,8 @@ const isAuthenticatedGuard = (
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const userId = localStorage.getItem('userId')
-  if (!userId) {
+  const token = localStorage.getItem('token')
+  if (!token) {
     return next({
       name: 'login'
     })
