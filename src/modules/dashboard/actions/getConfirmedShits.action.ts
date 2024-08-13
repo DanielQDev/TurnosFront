@@ -1,13 +1,13 @@
 import { dashboardApi } from '../api/dashboardApi'
 import { isAxiosError } from 'axios'
 
-export const getShiftsAction = async (week_number: string, company_id: number) => {
+export const getConfirmedShiftsAction = async (week_number: string, company_id: number) => {
   try {
-    const { data } = await dashboardApi.get('/shifts', { params: { week_number, company_id } })
+    const { data } = await dashboardApi.get('/confirmed', { params: { week_number, company_id } })
 
     return {
       ok: true,
-      schedules: data
+      confirmed: data
     }
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 422) {
