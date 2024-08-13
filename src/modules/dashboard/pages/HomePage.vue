@@ -1,17 +1,29 @@
 <template>
   <div class="scroll-smooth focus:scroll-auto">
-    <DashboardSearch @selected-company="getShifts" />
-    <DashboardTable :shifts="shifts" />
+    <DashboardSearch @selected-company="getByCompany" @selected-week="getByWeek" />
+    <DashboardApplyTable />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import DashboardSearch from '../components/DashboardSearch.vue'
-import DashboardTable from '../components/DashboardTable.vue'
+import DashboardApplyTable from '../components/DashboardApplyTable.vue'
 import { useShiftStore } from '../stores/shift.store'
 
-// const { shifts, getShifts } = useShiftStore()
-const getShifts = (id: number) => {
-  console.log('compa', id)
+const useShift = useShiftStore()
+
+const week_number = ref('')
+const company_id = ref(0)
+
+const getByWeek = (week: string) => {
+  week_number.value = week
+
+  useShift.getShifts(week_number.value, company_id.value)
+}
+const getByCompany = (id: number) => {
+  company_id.value = id
+
+  useShift.getShifts(week_number.value, company_id.value)
 }
 </script>

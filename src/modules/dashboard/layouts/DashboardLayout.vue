@@ -18,4 +18,17 @@
 import { RouterView } from 'vue-router'
 import DashboardNavbar from '../components/DashboardNavbar.vue'
 import DashboardSidebar from '../components/DashboardSidebar.vue'
+import { useShiftStore } from '../stores/shift.store'
+import { useCompanyStore } from '../stores/company.store'
+import { onMounted } from 'vue'
+
+const useCompany = useCompanyStore()
+const useShift = useShiftStore()
+
+onMounted(async () => {
+  await useCompany.getCompanies()
+  await useShift.getWeeks()
+  await useShift.getShifts('', 0)
+  await useShift.getConfirmedShifts('', 0)
+})
 </script>
