@@ -1,24 +1,25 @@
 <template>
   <div class="p-2 bg-white w-full md:w-60 flex flex-col md:flex hidden" id="sideNav">
     <nav>
-      <a
-        class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-cyan-500 hover:text-white"
-        href="#"
+      <RouterLink
+        class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-600 hover:to-cyan-600 hover:text-white"
+        :to="{ name: 'home' }"
+        activeClass="bg-gradient-to-r from-cyan-400 to-cyan-400 text-white"
+        ><i class="fa fa-home mr-2"></i>Inicio</RouterLink
       >
-        <i class="fa fa-home mr-2"></i>Inicio
-      </a>
       <a
         class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-cyan-500 hover:text-white"
         href="#"
       >
         <i class="fa fa-hourglass-o mr-2"></i>Disponibilidad
       </a>
-      <a
-        class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-cyan-500 hover:text-white"
-        href="#"
+      <RouterLink
+        class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-600 hover:to-cyan-600 hover:text-white"
+        :to="{ name: 'shifts' }"
+        activeClass="bg-gradient-to-r from-cyan-400 to-cyan-400 text-white"
       >
         <i class="fa fa-calendar mr-2"></i>Turnos
-      </a>
+      </RouterLink>
     </nav>
 
     <!-- Ítem de Cerrar Sesión -->
