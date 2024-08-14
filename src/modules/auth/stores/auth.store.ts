@@ -67,6 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
     username: computed(() => user.value?.name),
 
     login,
-    register
+    register,
+    logout
   }
 })
