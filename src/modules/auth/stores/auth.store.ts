@@ -4,6 +4,7 @@ import { AuthStatus } from '../enums/auth-status.enum'
 import type { LoginUser, RegisterUser } from '../interfaces/user.interface'
 import { loginAction } from '../actions/login.action'
 import { registerAction } from '../actions/register.action'
+import { checkStatusAction } from '../actions/checkStatus.action'
 
 export const useAuthStore = defineStore('auth', () => {
   const authStatus = ref(AuthStatus.Checking)
@@ -50,7 +51,31 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const checkStatus = async () => {
+    try {
+      const statusResp = await checkStatusAction()
+
+      if (!statusResp.ok) {
+        logout()
+        return false
+      }
+
+      authStatus.value = AuthStatus.Authenticated
+      user.value = statusResp.user
+      token.value = statusResp.token
+
+      localStorage.setItem('token', token.value)
+
+      return true
+    } catch (error) {
+      logout()
+      return false
+    }
+  }
+
   const logout = () => {
+    console.log('logout')
+
     localStorage.removeItem('token')
     user.value = undefined
     token.value = ''
@@ -68,6 +93,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     login,
     register,
-    logout
+    logout,
+    checkStatus
   }
 })
