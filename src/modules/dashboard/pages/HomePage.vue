@@ -18,11 +18,13 @@ const company_id = ref(0)
 
 const getByWeek = (week: string) => {
   week_number.value = week
+  console.log({ week })
 
   useShift.getShifts(week_number.value, company_id.value)
 }
 const getByCompany = (id: number) => {
   company_id.value = id
+  console.log({ id })
 
   useShift.getShifts(week_number.value, company_id.value)
 }
