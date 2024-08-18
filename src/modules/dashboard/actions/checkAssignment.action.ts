@@ -1,13 +1,13 @@
 import { dashboardApi } from '../api/dashboardApi'
 import { isAxiosError } from 'axios'
 
-export const getShiftsAction = async (week_number: string, company_id: number = 1) => {
+export const checkAssignmentAction = async (shift_id: number) => {
   try {
-    const { data } = await dashboardApi.get('/shifts', { params: { week_number, company_id } })
+    const { data } = await dashboardApi.get(`/verify_assignment/${shift_id}`)
 
     return {
       ok: true,
-      schedules: data
+      assigned_user: data
     }
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 422) {
@@ -17,6 +17,6 @@ export const getShiftsAction = async (week_number: string, company_id: number = 
       }
     }
 
-    throw new Error('No se pudo obtener los registros.')
+    throw new Error('No se pudo obtener el registro.')
   }
 }
