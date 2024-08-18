@@ -1,14 +1,5 @@
-export interface Confirmed {
-  day: string
-  shifts: Shift[]
-  id: any
-}
-
-interface Shift {
+export interface ConfirmedUser {
   id: number
-  start_hour: string
-  end_hour: string
+  name: string
   is_confirmed: boolean
-  user_name: string
-  color: string
 }
