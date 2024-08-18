@@ -1,5 +1,9 @@
 <template>
-  <div class="grid grid-cols-2">
+  <div v-if="isLoading">
+    <h3 class="flex items-center justify-center text-slate-600 text-cyan-400">Cargando...</h3>
+  </div>
+
+  <div v-else class="grid grid-cols-2">
     <div class="relative max-w-md w-full group">
       <button
         class="py-2.5 px-3 w-full md:text-sm text-site bg-white border border-dimmed focus:border-brand focus:outline-none focus:ring-0 peer flex items-center justify-between rounded"
@@ -24,7 +28,7 @@
         class="absolute z-[99] left-[50%] translate-x-[-50%] rounded-md overflow-hidden shadow-lg min-w-[200px] w-full peer-focus:visible peer-focus:opacity-100 opacity-0 invisible duration-200 p-1 bg-gray-100 dark:bg-cyan-300 border border-dimmed text-xs md:text-sm"
       >
         <button
-          v-for="{ id, name } in companies"
+          v-for="{ id, name } in useCompany.companyList"
           :key="id"
           @click="changeCompany(id, name)"
           class="w-full block cursor-pointer hover:bg-white dark:hover:bg-cyan-100 hover:text-link px-3 py-2 rounded-md"
@@ -58,7 +62,7 @@
           class="absolute z-[99] left-[50%] translate-x-[-50%] rounded-md overflow-hidden shadow-lg min-w-[200px] w-full peer-focus:visible peer-focus:opacity-100 opacity-0 invisible duration-200 p-1 bg-gray-100 dark:bg-cyan-300 border border-dimmed text-xs md:text-sm"
         >
           <button
-            v-for="{ week, title } in weeks"
+            v-for="{ week, title } in useShift.weekList"
             :key="week"
             @click="changeWeek(week, title)"
             class="w-full block cursor-pointer hover:bg-white dark:hover:bg-cyan-100 hover:text-link px-3 py-2 rounded-md"
@@ -71,30 +75,30 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useCompanyStore } from '../stores/company.store'
 import { useShiftStore } from '../stores/shift.store'
-import type { Company } from '../interfaces/company.interface'
-import type { Week } from '../interfaces/week.interface'
 
 const useCompany = useCompanyStore()
 const useShift = useShiftStore()
 
-const companies: Company[] = useCompany.companies
-const weeks: Week[] = useShift.weeks
+const isLoading = ref(true)
 
-const firstOptionsCompanies = companies.length > 0 ? companies[0].name : ''
-const firstOptionsWeeks = weeks.length > 0 ? weeks[0].title : ''
+onBeforeMount(async () => {
+  await useCompany.getCompanies()
+  await useShift.getWeeks()
+  isLoading.value = false
+})
 
-const optionsCompanies = ref(firstOptionsCompanies)
-const optionsWeeks = ref(firstOptionsWeeks)
+const optionsCompanies = ref('Primera empresa')
+const optionsWeeks = ref('Semana actual')
 
 const emit = defineEmits<{
   selectedCompany: [id: number]
-  selectedWeek: [week: number]
+  selectedWeek: [week: string]
 }>()
 
-const changeWeek = (week: number, title: string) => {
+const changeWeek = (week: string, title: string) => {
   optionsWeeks.value = title
   emit('selectedWeek', week)
 }
@@ -103,18 +107,4 @@ const changeCompany = (id: number, name: string) => {
   optionsCompanies.value = name
   emit('selectedCompany', id)
 }
-
-// const weeks = () => {
-//   const dateNow: Date = new Date()
-//   const startYear: number = new Date(dateNow.getFullYear(), 0, 1).getTime()
-//   const today: number = new Date(
-//     dateNow.getFullYear(),
-//     dateNow.getMonth(),
-//     dateNow.getDay()
-//   ).getTime()
-//   const days: number = (today - startYear) / 86400000
-//   const week: number = Math.ceil(days / 7)
-
-//   return week
-// }
 </script>

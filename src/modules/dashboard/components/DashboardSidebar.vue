@@ -5,14 +5,15 @@
         class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-600 hover:to-cyan-600 hover:text-white"
         :to="{ name: 'home' }"
         activeClass="bg-gradient-to-r from-cyan-400 to-cyan-400 text-white"
-        ><i class="fa fa-home mr-2"></i>Inicio</RouterLink
-      >
-      <a
+        ><i class="fa fa-home mr-2"></i>Inicio
+      </RouterLink>
+      <RouterLink
         class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-cyan-500 hover:text-white"
-        href="#"
+        :to="{ name: 'availability' }"
+        activeClass="bg-gradient-to-r from-cyan-400 to-cyan-400 text-white"
       >
         <i class="fa fa-hourglass-o mr-2"></i>Disponibilidad
-      </a>
+      </RouterLink>
       <RouterLink
         class="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-600 hover:to-cyan-600 hover:text-white"
         :to="{ name: 'shifts' }"
@@ -39,7 +40,7 @@
 </template>
 <script lang="ts" setup>
 import { useAuthStore } from '@/modules/auth/stores/auth.store'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 
 const useAuth = useAuthStore()
 const router = useRouter()
