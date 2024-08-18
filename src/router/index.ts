@@ -37,6 +37,12 @@ const router = createRouter({
           name: 'shifts',
           beforeEnter: [isAuthenticatedGuard],
           component: () => import('@/modules/dashboard/pages/ShiftsPage.vue')
+        },
+        {
+          path: '/availability',
+          name: 'availability',
+          beforeEnter: [isAuthenticatedGuard],
+          component: () => import('@/modules/dashboard/pages/AvailabilityPage.vue')
         }
       ]
     }
