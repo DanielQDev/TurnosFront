@@ -1,20 +1,26 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import { getShiftsAction } from '../actions/getShifts.action'
-import { applyShiftAction } from '../actions/applyShift.action'
 import type { Schedule } from '../interfaces/shift.interface'
 import { getWeeksAction } from '../actions/getWeeks.action'
 import type { Week } from '../interfaces/week.interface'
-import getDateFormat from '@/utils/getDateFormat'
-import type { Confirmed } from '../interfaces/confirmed.interface'
-import { getConfirmedShiftsAction } from '../actions/getConfirmedShits.action'
+import type { ConfirmedUser } from '../interfaces/confirmed.interface'
+import { getConfirmedUsersAction } from '../actions/getConfirmedUsers.action'
+import { checkPostulateAction } from '../actions/checkPostulate.action'
+import { checkAssignmentAction } from '../actions/checkAssignment.action'
+import type { Assigned } from '../interfaces/assignedUser.interface'
+import { computed, ref } from 'vue'
 
 export const useShiftStore = defineStore('shift', () => {
   const shifts = ref<Schedule[]>([])
   const weeks = ref<Week[]>([])
-  const confirmed = ref<Confirmed[]>([])
+  const assignedUser = ref<Assigned>()
+  const is_postulated = ref(false)
+  const confirmedUsers = ref<ConfirmedUser[]>([])
 
-  const getShifts = async (week_number: string, company_id: number) => {
+  const shiftList = computed(() => [...shifts.value])
+  const weekList = computed(() => [...weeks.value])
+
+  async function getShifts(week_number: string, company_id: number) {
     const resp = await getShiftsAction(week_number, company_id)
 
     if (!resp.ok) return false
@@ -22,33 +28,15 @@ export const useShiftStore = defineStore('shift', () => {
     shifts.value = resp.schedules
   }
 
-  const getConfirmedShifts = async (week_number: string, company_id: number) => {
-    const resp = await getConfirmedShiftsAction(week_number, company_id)
+  async function checkPostulate(id: number) {
+    const resp = await checkPostulateAction(id)
 
     if (!resp.ok) return false
 
-    confirmed.value = resp.confirmed
+    is_postulated.value = resp.shift.postulated
   }
 
-  const apply = async (id: number, postulated: boolean) => {
-    const resp = await applyShiftAction(id, postulated)
-
-    if (!resp.ok) return false
-
-    const dayShift = shifts.value.find(
-      (dayShift) => dayShift.day === getDateFormat(resp.shift.start_hour)
-    )
-
-    if (dayShift) {
-      const updateShift = dayShift.shifts.find((shift) => shift.id === resp.shift.id)
-
-      if (updateShift) {
-        updateShift.is_postulated = resp.shift.is_postulated
-      }
-    }
-  }
-
-  const getWeeks = async () => {
+  async function getWeeks() {
     const resp = await getWeeksAction()
 
     if (!resp.ok) return false
@@ -56,14 +44,36 @@ export const useShiftStore = defineStore('shift', () => {
     weeks.value = resp.weeks
   }
 
+  async function verify_assignment(shift_id: number) {
+    const resp = await checkAssignmentAction(shift_id)
+
+    if (!resp.ok) return false
+
+    assignedUser.value = resp.assigned_user
+  }
+
+  async function getConfirmedUsers(shift_id: number) {
+    const resp = await getConfirmedUsersAction(shift_id)
+
+    if (!resp.ok) return false
+
+    confirmedUsers.value = resp.users
+  }
+
   return {
     shifts,
     weeks,
-    confirmed,
+    assignedUser,
+    is_postulated,
+    confirmedUsers,
+
+    shiftList,
+    weekList,
 
     getShifts,
     getWeeks,
-    apply,
-    getConfirmedShifts
+    checkPostulate,
+    verify_assignment,
+    getConfirmedUsers
   }
 })
